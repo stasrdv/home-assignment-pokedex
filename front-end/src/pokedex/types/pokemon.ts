@@ -13,10 +13,3 @@ export type Pokemon = {
   generation: number;
   legendary: boolean;
 };
-
-export type PokeListQueryParams = {
-  page: number;
-  pageSize: number;
-  pokeType: string;
-  sortOrder: "asc" | "desc";
-};

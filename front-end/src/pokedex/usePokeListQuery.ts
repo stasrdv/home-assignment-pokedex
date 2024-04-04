@@ -1,5 +1,5 @@
 import { UseQueryResult, useQuery } from "react-query";
-import { PokeListQueryParams, Pokemon } from "./types/pokemon";
+import { Pokemon } from "./types/pokemon";
 import { CACHE_DURATION } from "./constants";
 const API_URL = await import.meta.env.VITE_API_URL;
 
@@ -44,4 +44,11 @@ function mapResponseToPokemonList(responseData: {
 type PokemonListResponse = {
   list: Pokemon[];
   metadata: { totalCount: number };
+};
+
+type PokeListQueryParams = {
+  page: number;
+  pageSize: number;
+  pokeType: string;
+  sortOrder: "asc" | "desc";
 };
