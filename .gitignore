@@ -1,0 +1,9 @@
+node_modules/
+
+# Ignore any compiled files
+*.log
+*.out
+
+.vscode/
+.idea/
+
