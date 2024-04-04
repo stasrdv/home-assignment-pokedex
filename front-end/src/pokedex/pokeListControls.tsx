@@ -27,7 +27,7 @@ export const PokeListControls: FC<{
   setCurrentPage,
   setPageSize,
 }) => {
-  const handlePageSizeChange = (_: number, size: number) => {
+  const handleTypeSelection = (_: number, size: number) => {
     setPageSize(size);
   };
 
@@ -38,7 +38,7 @@ export const PokeListControls: FC<{
         currentPage={currentPage}
         selectedType={selectedType}
         onPageChange={setCurrentPage}
-        onPageSizeChange={handlePageSizeChange}
+        onPageSizeChange={handleTypeSelection}
         sortOrder={sortOrder}
       />
       <Button.Group>

@@ -3,7 +3,7 @@ import { usePokemonListQuery } from "./usePokeListQuery";
 import styled from "styled-components";
 import { Empty, List } from "antd";
 import { PokemonListItem } from "./pokeListItem";
-import { getLocalStorage, setLocalStorage } from "../utils";
+
 import {
   PAGE_SIZE_KEY,
   DEFAULT_PAGE_SIZE,
@@ -15,22 +15,29 @@ import {
 } from "./constants";
 
 import { PokeListControls } from "./pokeListControls";
+import { StorageUtils } from "../utils";
 
 export const PokemonList: FC = () => {
   const [pageSize, setPageSize] = useState(() => {
-    return getLocalStorage<number>(PAGE_SIZE_KEY, DEFAULT_PAGE_SIZE);
+    return StorageUtils.getLocalStorage<number>(
+      PAGE_SIZE_KEY,
+      DEFAULT_PAGE_SIZE
+    );
   });
 
   const [currentPage, setCurrentPage] = useState(() => {
-    return getLocalStorage(CURRENT_PAGE_KEY, DEFAULT_CURRENT);
+    return StorageUtils.getLocalStorage(CURRENT_PAGE_KEY, DEFAULT_CURRENT);
   });
 
   const [selectedType, setSelectedType] = useState(() => {
-    return getLocalStorage<string>(CURRENT_TYPE_KEY, "");
+    return StorageUtils.getLocalStorage<string>(CURRENT_TYPE_KEY, "");
   });
 
   const [sortOrder, setSortOrder] = useState(() => {
-    return getLocalStorage<"asc" | "desc">(SORT_ORDER_KEY, DEFAULT_SORT);
+    return StorageUtils.getLocalStorage<"asc" | "desc">(
+      SORT_ORDER_KEY,
+      DEFAULT_SORT
+    );
   });
 
   const handleTypeSelect = (type: string) => {
@@ -38,10 +45,10 @@ export const PokemonList: FC = () => {
   };
 
   useEffect(() => {
-    setLocalStorage(PAGE_SIZE_KEY, pageSize);
-    setLocalStorage(CURRENT_PAGE_KEY, currentPage);
-    setLocalStorage(CURRENT_TYPE_KEY, selectedType);
-    setLocalStorage(SORT_ORDER_KEY, sortOrder);
+    StorageUtils.setLocalStorage(PAGE_SIZE_KEY, pageSize);
+    StorageUtils.setLocalStorage(CURRENT_PAGE_KEY, currentPage);
+    StorageUtils.setLocalStorage(CURRENT_TYPE_KEY, selectedType);
+    StorageUtils.setLocalStorage(SORT_ORDER_KEY, sortOrder);
   }, [pageSize, currentPage, selectedType, sortOrder]);
 
   const { data, error, isLoading } = usePokemonListQuery({
