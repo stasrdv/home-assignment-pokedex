@@ -35,4 +35,4 @@
 
 ## Contributors
 
-- [Your Name](https://github.com/stasrdv/home-assignment-pokedex)
+- [Stas Rudevitsky](https://github.com/stasrdv/home-assignment-pokedex)
