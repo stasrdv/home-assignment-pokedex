@@ -20,7 +20,7 @@ export const PokemonPagination: FC<{
   onPageSizeChange,
   sortOrder,
 }) => {
-  const { data } = usePokemonListQuery({
+  const { data, isLoading } = usePokemonListQuery({
     currentPage,
     pageSize,
     selectedType,
@@ -44,6 +44,7 @@ export const PokemonPagination: FC<{
       onChange={onPageChange}
       onShowSizeChange={onPageSizeChange}
       showSizeChanger
+      disabled={isLoading}
     />
   );
 };
