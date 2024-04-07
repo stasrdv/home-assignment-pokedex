@@ -6,15 +6,15 @@ const API_URL = await import.meta.env.VITE_API_URL;
 export const usePokemonListQuery = (
   queryParams: PokeListQueryParams
 ): UseQueryResult<PokemonListResponse> => {
-  const { page, pageSize, pokeType, sortOrder } = queryParams;
+  const { currentPage, pageSize, selectedType, sortOrder } = queryParams;
   const urlSearchParams = new URLSearchParams({
-    page: page.toString(),
+    page: currentPage.toString(),
     page_size: pageSize.toString(),
-    poke_type: pokeType,
+    poke_type: selectedType,
     sort_order: sortOrder,
   });
   return useQuery(
-    ["pokemonsList", page, pageSize, pokeType, sortOrder],
+    ["pokemonsList", currentPage, pageSize, selectedType, sortOrder],
     async () => {
       const response = await fetch(`${API_URL}/?${urlSearchParams.toString()}`);
       if (!response.ok) {
@@ -46,9 +46,9 @@ type PokemonListResponse = {
   metadata: { totalCount: number };
 };
 
-type PokeListQueryParams = {
-  page: number;
+export type PokeListQueryParams = {
+  currentPage: number;
   pageSize: number;
-  pokeType: string;
+  selectedType: string;
   sortOrder: "asc" | "desc";
 };

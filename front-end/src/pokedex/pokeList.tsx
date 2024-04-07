@@ -1,5 +1,5 @@
 import { FC, useEffect, useState } from "react";
-import { usePokemonListQuery } from "./usePokeListQuery";
+import { PokeListQueryParams, usePokemonListQuery } from "./usePokeListQuery";
 import styled from "styled-components";
 import { Empty, List } from "antd";
 import { PokemonListItem } from "./pokeListItem";
@@ -18,59 +18,56 @@ import { PokeListControls } from "./pokeListControls";
 import { StorageUtils } from "../utils";
 
 export const PokemonList: FC = () => {
-  const [pageSize, setPageSize] = useState(() => {
-    return StorageUtils.getLocalStorage<number>(
-      PAGE_SIZE_KEY,
-      DEFAULT_PAGE_SIZE
-    );
-  });
-
-  const [currentPage, setCurrentPage] = useState(() => {
-    return StorageUtils.getLocalStorage(CURRENT_PAGE_KEY, DEFAULT_CURRENT);
-  });
-
-  const [selectedType, setSelectedType] = useState(() => {
-    return StorageUtils.getLocalStorage<string>(CURRENT_TYPE_KEY, "");
-  });
-
-  const [sortOrder, setSortOrder] = useState(() => {
-    return StorageUtils.getLocalStorage<"asc" | "desc">(
-      SORT_ORDER_KEY,
-      DEFAULT_SORT
-    );
+  const [queryParams, setQueryParams] = useState<PokeListQueryParams>(() => {
+    return {
+      currentPage: StorageUtils.getLocalStorage<number>(
+        CURRENT_PAGE_KEY,
+        DEFAULT_CURRENT
+      ),
+      pageSize: StorageUtils.getLocalStorage<number>(
+        PAGE_SIZE_KEY,
+        DEFAULT_PAGE_SIZE
+      ),
+      selectedType: StorageUtils.getLocalStorage<string>(CURRENT_TYPE_KEY, ""),
+      sortOrder: StorageUtils.getLocalStorage<"asc" | "desc">(
+        SORT_ORDER_KEY,
+        DEFAULT_SORT
+      ),
+    };
   });
 
   const handleTypeSelect = (type: string) => {
-    setSelectedType(type ?? "");
+    setQueryParams((prevParams) => ({
+      ...prevParams,
+      selectedType: type ?? "",
+    }));
   };
 
   useEffect(() => {
-    StorageUtils.setLocalStorage(PAGE_SIZE_KEY, pageSize);
-    StorageUtils.setLocalStorage(CURRENT_PAGE_KEY, currentPage);
-    StorageUtils.setLocalStorage(CURRENT_TYPE_KEY, selectedType);
-    StorageUtils.setLocalStorage(SORT_ORDER_KEY, sortOrder);
-  }, [pageSize, currentPage, selectedType, sortOrder]);
+    StorageUtils.setLocalStorage(CURRENT_PAGE_KEY, queryParams.currentPage);
+    StorageUtils.setLocalStorage(PAGE_SIZE_KEY, queryParams.pageSize);
+    StorageUtils.setLocalStorage(CURRENT_TYPE_KEY, queryParams.selectedType);
+    StorageUtils.setLocalStorage(SORT_ORDER_KEY, queryParams.sortOrder);
+  }, [queryParams]);
 
-  const { data, error, isLoading } = usePokemonListQuery({
-    page: currentPage,
-    pageSize,
-    pokeType: selectedType,
-    sortOrder,
-  });
+  const { data, error, isLoading } = usePokemonListQuery(queryParams);
 
   if (error) return <Empty />;
 
   return (
     <StyledListWrapper>
       <PokeListControls
-        pageSize={pageSize}
-        currentPage={currentPage}
-        selectedType={selectedType}
+        queryParams={queryParams}
         handleTypeSelect={handleTypeSelect}
-        sortOrder={sortOrder}
-        setSortOrder={setSortOrder}
-        setCurrentPage={setCurrentPage}
-        setPageSize={setPageSize}
+        setSortOrder={(order) =>
+          setQueryParams((prevParams) => ({ ...prevParams, sortOrder: order }))
+        }
+        setCurrentPage={(page) =>
+          setQueryParams((prevParams) => ({ ...prevParams, page }))
+        }
+        setPageSize={(size) =>
+          setQueryParams((prevParams) => ({ ...prevParams, pageSize: size }))
+        }
       />
       <List
         className='list'

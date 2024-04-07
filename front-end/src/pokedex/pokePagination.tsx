@@ -21,9 +21,9 @@ export const PokemonPagination: FC<{
   sortOrder,
 }) => {
   const { data } = usePokemonListQuery({
-    page: currentPage,
+    currentPage,
     pageSize,
-    pokeType: selectedType,
+    selectedType,
     sortOrder,
   });
 
