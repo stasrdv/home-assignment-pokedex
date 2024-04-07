@@ -51,6 +51,7 @@ export const PokemonPagination: FC<{
 const StyledPagination = styled(Pagination)`
   flex: 1;
 `;
+
 const PAGE_SIZES = {
   SMALL: 5,
   MEDIUM: 10,
