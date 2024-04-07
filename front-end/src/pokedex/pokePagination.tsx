@@ -1,7 +1,7 @@
 import { Pagination, Typography } from "antd";
 import { FC, useEffect, useState } from "react";
 import { usePokemonListQuery } from "./usePokeListQuery";
-import { PAGE_SIZES } from "./constants";
+
 import styled from "styled-components";
 const { Text } = Typography;
 
@@ -51,3 +51,9 @@ export const PokemonPagination: FC<{
 const StyledPagination = styled(Pagination)`
   flex: 1;
 `;
+const PAGE_SIZES = {
+  SMALL: 5,
+  MEDIUM: 10,
+  LARGE: 20,
+  EXTRA_LARGE: 30,
+};

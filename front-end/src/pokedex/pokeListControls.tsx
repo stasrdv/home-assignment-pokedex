@@ -7,17 +7,17 @@ import { FC } from "react";
 import { PokemonPagination } from "./pokePagination";
 import { PokemonTypesSelect } from "./pokeTypesSelect";
 import styled from "styled-components";
-import { PokeListQueryParams } from "./usePokeListQuery";
+import { PokeListQueryParams } from "./types/poke-query-params";
 
 export const PokeListControls: FC<{
   queryParams: PokeListQueryParams;
-  handleTypeSelect: (type: string) => void;
+  setSelectedType: (type: string) => void;
   setSortOrder: (order: "asc" | "desc") => void;
   setCurrentPage: (page: number) => void;
   setPageSize: (page: number) => void;
 }> = ({
   queryParams,
-  handleTypeSelect,
+  setSelectedType,
   setSortOrder,
   setCurrentPage,
   setPageSize,
@@ -52,7 +52,7 @@ export const PokeListControls: FC<{
       </Button.Group>
 
       <PokemonTypesSelect
-        handleTypeSelect={handleTypeSelect}
+        handleTypeSelect={setSelectedType}
         selectedType={selectedType}
       />
     </StyledControl>
