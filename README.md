@@ -16,7 +16,7 @@
 
 1. Navigate to the `frontend` directory:
 
-   cd front end
+   cd front-end
 
 2. Install dependencies:
 
