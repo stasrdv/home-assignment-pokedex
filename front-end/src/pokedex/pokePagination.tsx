@@ -17,6 +17,9 @@ export const PokemonPagination: FC = () => {
     }
   }, [data]);
 
+  const handleOnChange = (page: number, size: number): void => {
+    queryParams.setPagination(page, size);
+  };
   return (
     <StyledPagination
       total={totalItemsCount}
@@ -24,8 +27,8 @@ export const PokemonPagination: FC = () => {
       defaultPageSize={queryParams.pageSize}
       defaultCurrent={queryParams.currentPage}
       pageSizeOptions={Object.values(PAGE_SIZES)}
-      onChange={(size) => queryParams.setCurrentPage(size)}
-      onShowSizeChange={(_, size) => queryParams.setPageSize(size)}
+      onChange={handleOnChange}
+      onShowSizeChange={handleOnChange}
       showSizeChanger
       disabled={isLoading}
     />

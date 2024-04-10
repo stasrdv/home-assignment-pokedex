@@ -2,57 +2,79 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { PokeListQueryParams } from "./types/poke-query-params";
 import { useState, useEffect } from "react";
 
-export const usePokeListQueryParams = (): PokeListQueryParams => {
+export const usePokeListQueryParams = (): PokeListParams => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
 
-  const [currentPage, setCurrentPage] = useState(
-    searchParams.get("page") || "1"
-  );
-  const [pageSize, setPageSize] = useState(
-    searchParams.get("page_size") || "10"
-  );
+  const getPageOrDefault = (param: string, defaultValue: number | string) => {
+    const value = searchParams.get(param);
+    return value ? parseInt(value, 10) : defaultValue;
+  };
+
+  const [pagination, setPagination] = useState({
+    currentPage: getPageOrDefault("page", 1),
+    pageSize: getPageOrDefault("page_size", 10),
+  });
   const [selectedType, setSelectedType] = useState(
     searchParams.get("poke_type") || ""
   );
-  const [sortOrder, setSortOrder] = useState(
-    searchParams.get("poke_type") || ""
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc">(
+    searchParams.get("sort_order") === "desc" ? "desc" : "asc"
   );
 
   useEffect(() => {
-    setCurrentPage(searchParams.get("page") || "1");
-    setPageSize(searchParams.get("page_size") || "10");
+    setPagination({
+      currentPage: getPageOrDefault("page", 1),
+      pageSize: getPageOrDefault("page_size", 10),
+    });
     setSelectedType(searchParams.get("poke_type") || "");
-    setSortOrder(searchParams.get("sort_order") || "asc");
+    setSortOrder(searchParams.get("sort_order") === "desc" ? "desc" : "asc");
   }, [searchParams]);
 
   const updateSearchParams = (
-    page: string,
-    size: string,
+    page: number,
+    size: number,
     type: string,
-    sortOrder: string
+    sortOrder: "asc" | "desc"
   ) => {
-    console.log(size);
     const params = new URLSearchParams(searchParams);
-    params.set("page", page);
-    params.set("page_size", size);
-    params.set("poke_type", type ?? "");
+    params.set("page", String(page));
+    params.set("page_size", String(size));
+    params.set("poke_type", type || "");
     params.set("sort_order", sortOrder);
     navigate(`?${params.toString()}`, { replace: true });
   };
 
   return {
-    currentPage,
-    pageSize,
+    currentPage: +pagination.currentPage,
+    pageSize: +pagination.pageSize,
     sortOrder,
     selectedType,
-    setCurrentPage: (updatedPage: string) =>
-      updateSearchParams(updatedPage, pageSize, selectedType, sortOrder),
-    setPageSize: (updatedSize: string) =>
-      updateSearchParams(currentPage, updatedSize, selectedType, sortOrder),
+    setPagination: (updatedPage: number, updatedPageSize: number) =>
+      updateSearchParams(updatedPage, updatedPageSize, selectedType, sortOrder),
     setSelectedType: (updatedType: string) =>
-      updateSearchParams(currentPage, pageSize, updatedType, sortOrder),
-    setSortOrder: (updatedOrder: string) =>
-      updateSearchParams(currentPage, pageSize, selectedType, updatedOrder),
+      updateSearchParams(
+        +pagination.currentPage,
+        +pagination.pageSize,
+        updatedType,
+        sortOrder
+      ),
+    setSortOrder: (updatedOrder: "asc" | "desc") =>
+      updateSearchParams(
+        +pagination.currentPage,
+        +pagination.pageSize,
+        selectedType,
+        updatedOrder
+      ),
   };
 };
+
+interface PokeListParams extends PokeListQueryParams {
+  currentPage: number;
+  pageSize: number;
+  selectedType: string;
+  sortOrder: "asc" | "desc";
+  setPagination: (updatedPage: number, updatedPageSize: number) => void;
+  setSelectedType: (updatedType: string) => void;
+  setSortOrder: (updatedOrder: "asc" | "desc") => void;
+}

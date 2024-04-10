@@ -9,7 +9,7 @@ export const usePokemonListQuery = (
 ): UseQueryResult<PokemonListResponse> => {
   const { currentPage, pageSize, selectedType, sortOrder } = queryParams;
   const urlSearchParams = new URLSearchParams({
-    page: currentPage.toString(),
+    page: currentPage?.toString(),
     page_size: pageSize?.toString(),
     poke_type: selectedType,
     sort_order: sortOrder,
