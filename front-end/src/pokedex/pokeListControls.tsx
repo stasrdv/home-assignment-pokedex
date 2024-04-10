@@ -7,53 +7,33 @@ import { FC } from "react";
 import { PokemonPagination } from "./pokePagination";
 import { PokemonTypesSelect } from "./pokeTypesSelect";
 import styled from "styled-components";
-import { PokeListQueryParams } from "./types/poke-query-params";
+import { usePokeListQueryParams } from "./usePokeListParams";
 
-export const PokeListControls: FC<{
-  queryParams: PokeListQueryParams;
-  setSelectedType: (type: string) => void;
-  setSortOrder: (order: "asc" | "desc") => void;
-  setCurrentPage: (page: number) => void;
-  setPageSize: (page: number) => void;
-}> = ({
-  queryParams,
-  setSelectedType,
-  setSortOrder,
-  setCurrentPage,
-  setPageSize,
-}) => {
-  const { pageSize, currentPage, selectedType, sortOrder } = queryParams;
-
+export const PokeListControls: FC = () => {
+  const queryParams = usePokeListQueryParams();
   return (
     <StyledControl>
-      <PokemonPagination
-        pageSize={pageSize}
-        currentPage={currentPage}
-        selectedType={selectedType}
-        onPageChange={setCurrentPage}
-        onPageSizeChange={(_: number, size: number) => setPageSize(size)}
-        sortOrder={sortOrder}
-      />
+      <PokemonPagination />
       <Button.Group>
         <Button
           icon={<SortDescendingOutlined />}
-          onClick={() => setSortOrder("desc")}
-          type={sortOrder === "desc" ? "primary" : "default"}
+          onClick={() => queryParams.setSortOrder("desc")}
+          type={queryParams.sortOrder === "desc" ? "primary" : "default"}
         >
           Descending
         </Button>
         <Button
           icon={<SortAscendingOutlined />}
-          onClick={() => setSortOrder("asc")}
-          type={sortOrder === "asc" ? "primary" : "default"}
+          onClick={() => queryParams.setSortOrder("asc")}
+          type={queryParams.sortOrder === "asc" ? "primary" : "default"}
         >
           Ascending
         </Button>
       </Button.Group>
 
       <PokemonTypesSelect
-        handleTypeSelect={setSelectedType}
-        selectedType={selectedType}
+        handleTypeSelect={(type) => queryParams.setSelectedType(type)}
+        selectedType={queryParams.selectedType}
       />
     </StyledControl>
   );

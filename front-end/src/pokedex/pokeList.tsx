@@ -7,20 +7,13 @@ import { PokeListControls } from "./pokeListControls";
 import { usePokeListQueryParams } from "./usePokeListParams";
 
 export const PokemonList: FC = () => {
-  const [queryParams, setQueryParams] = usePokeListQueryParams();
+  const queryParams = usePokeListQueryParams();
   const { data, error, isLoading } = usePokemonListQuery(queryParams);
-
   if (error) return <Empty />;
 
   return (
     <StyledListWrapper>
-      <PokeListControls
-        queryParams={queryParams}
-        setSelectedType={(type) => setQueryParams({ selectedType: type ?? "" })}
-        setSortOrder={(order) => setQueryParams({ sortOrder: order })}
-        setCurrentPage={(page) => setQueryParams({ currentPage: page })}
-        setPageSize={(size) => setQueryParams({ pageSize: size })}
-      />
+      <PokeListControls />
       <List
         className='list'
         loading={isLoading}

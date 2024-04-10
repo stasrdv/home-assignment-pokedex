@@ -3,31 +3,14 @@ import { FC, useEffect, useState } from "react";
 import { usePokemonListQuery } from "./usePokeListQuery";
 
 import styled from "styled-components";
+import { usePokeListQueryParams } from "./usePokeListParams";
 const { Text } = Typography;
 
-export const PokemonPagination: FC<{
-  pageSize: number;
-  currentPage: number;
-  selectedType: string;
-  sortOrder: "asc" | "desc";
-  onPageChange: (page: number) => void;
-  onPageSizeChange: (current: number, size: number) => void;
-}> = ({
-  pageSize,
-  currentPage,
-  selectedType,
-  onPageChange,
-  onPageSizeChange,
-  sortOrder,
-}) => {
-  const { data, isLoading } = usePokemonListQuery({
-    currentPage,
-    pageSize,
-    selectedType,
-    sortOrder,
-  });
-
+export const PokemonPagination: FC = () => {
+  const queryParams = usePokeListQueryParams();
+  const { data, isLoading } = usePokemonListQuery(queryParams);
   const [totalItemsCount, setTotalItemsCount] = useState(0);
+
   useEffect(() => {
     if (data && data.metadata) {
       setTotalItemsCount(data.metadata.totalCount);
@@ -38,11 +21,11 @@ export const PokemonPagination: FC<{
     <StyledPagination
       total={totalItemsCount}
       showTotal={(total) => <Text strong>Total {total} Pokemons</Text>}
-      defaultPageSize={pageSize}
-      defaultCurrent={currentPage}
+      defaultPageSize={queryParams.pageSize}
+      defaultCurrent={queryParams.currentPage}
       pageSizeOptions={Object.values(PAGE_SIZES)}
-      onChange={onPageChange}
-      onShowSizeChange={onPageSizeChange}
+      onChange={(size) => queryParams.setCurrentPage(size)}
+      onShowSizeChange={(_, size) => queryParams.setPageSize(size)}
       showSizeChanger
       disabled={isLoading}
     />

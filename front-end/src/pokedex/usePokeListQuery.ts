@@ -1,6 +1,5 @@
 import { UseQueryResult, useQuery } from "react-query";
 import { Pokemon } from "./types/pokemon";
-import { CACHE_DURATION } from "./constants";
 import { PokeListQueryParams } from "./types/poke-query-params";
 
 const API_URL = await import.meta.env.VITE_API_URL;
@@ -11,7 +10,7 @@ export const usePokemonListQuery = (
   const { currentPage, pageSize, selectedType, sortOrder } = queryParams;
   const urlSearchParams = new URLSearchParams({
     page: currentPage.toString(),
-    page_size: pageSize.toString(),
+    page_size: pageSize?.toString(),
     poke_type: selectedType,
     sort_order: sortOrder,
   });
@@ -25,9 +24,6 @@ export const usePokemonListQuery = (
 
       const responseData = await response.json();
       return mapResponseToPokemonList(responseData);
-    },
-    {
-      staleTime: CACHE_DURATION,
     }
   );
 };
