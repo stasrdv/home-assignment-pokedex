@@ -6,75 +6,56 @@ export const usePokeListQueryParams = (): PokeListParams => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
 
-  const getPageOrDefault = (param: string, defaultValue: number | string) => {
-    const value = searchParams.get(param);
-    return value ? parseInt(value, 10) : defaultValue;
-  };
-
-  const [pagination, setPagination] = useState({
-    currentPage: getPageOrDefault("page", 1),
-    pageSize: getPageOrDefault("page_size", 10),
-  });
-  const [selectedType, setSelectedType] = useState(
-    searchParams.get("poke_type") || ""
-  );
-  const [sortOrder, setSortOrder] = useState<"asc" | "desc">(
-    searchParams.get("sort_order") === "desc" ? "desc" : "asc"
+  const [queryParams, setQueryParams] = useState<PokeListParams["queryParams"]>(
+    {
+      currentPage: parseInt(searchParams.get("page") || "1", 10),
+      pageSize: parseInt(searchParams.get("page_size") || "10", 10),
+      selectedType: searchParams.get("poke_type") || "",
+      sortOrder: searchParams.get("sort_order") === "desc" ? "desc" : "asc",
+    }
   );
 
   useEffect(() => {
-    setPagination({
-      currentPage: getPageOrDefault("page", 1),
-      pageSize: getPageOrDefault("page_size", 10),
+    setQueryParams({
+      currentPage: parseInt(searchParams.get("page") || "1", 10),
+      pageSize: parseInt(searchParams.get("page_size") || "10", 10),
+      selectedType: searchParams.get("poke_type") || "",
+      sortOrder: searchParams.get("sort_order") === "desc" ? "desc" : "asc",
     });
-    setSelectedType(searchParams.get("poke_type") || "");
-    setSortOrder(searchParams.get("sort_order") === "desc" ? "desc" : "asc");
   }, [searchParams]);
 
-  const updateSearchParams = (
-    page: number,
-    size: number,
-    type: string,
-    sortOrder: "asc" | "desc"
-  ) => {
-    const params = new URLSearchParams(searchParams);
-    params.set("page", String(page));
-    params.set("page_size", String(size));
-    params.set("poke_type", type || "");
-    params.set("sort_order", sortOrder);
-    navigate(`?${params.toString()}`, { replace: true });
+  const updateSearchParams = (updatedParams: Partial<PokeListQueryParams>) => {
+    const existingParams = searchParams;
+    const updatedSearchParameters = new URLSearchParams(
+      existingParams.toString()
+    );
+    if (updatedParams.currentPage !== undefined) {
+      updatedSearchParameters.set("page", String(updatedParams.currentPage));
+    }
+    if (updatedParams.pageSize !== undefined) {
+      updatedSearchParameters.set("page_size", String(updatedParams.pageSize));
+    }
+    updatedSearchParameters.set("poke_type", updatedParams.selectedType || "");
+    if (updatedParams.sortOrder !== undefined) {
+      updatedSearchParameters.set("sort_order", updatedParams.sortOrder);
+    }
+
+    const newSearchParamsString = updatedSearchParameters.toString();
+    const newUrl = `${window.location.pathname}${
+      newSearchParamsString ? `?${newSearchParamsString}` : ""
+    }`;
+
+    navigate(newUrl, { replace: true });
   };
 
   return {
-    currentPage: +pagination.currentPage,
-    pageSize: +pagination.pageSize,
-    sortOrder,
-    selectedType,
-    setPagination: (updatedPage: number, updatedPageSize: number) =>
-      updateSearchParams(updatedPage, updatedPageSize, selectedType, sortOrder),
-    setSelectedType: (updatedType: string) =>
-      updateSearchParams(
-        +pagination.currentPage,
-        +pagination.pageSize,
-        updatedType,
-        sortOrder
-      ),
-    setSortOrder: (updatedOrder: "asc" | "desc") =>
-      updateSearchParams(
-        +pagination.currentPage,
-        +pagination.pageSize,
-        selectedType,
-        updatedOrder
-      ),
+    queryParams,
+    updateQueryParams: (updatedParams: Partial<PokeListQueryParams>) =>
+      updateSearchParams(updatedParams),
   };
 };
 
-interface PokeListParams extends PokeListQueryParams {
-  currentPage: number;
-  pageSize: number;
-  selectedType: string;
-  sortOrder: "asc" | "desc";
-  setPagination: (updatedPage: number, updatedPageSize: number) => void;
-  setSelectedType: (updatedType: string) => void;
-  setSortOrder: (updatedOrder: "asc" | "desc") => void;
+interface PokeListParams {
+  queryParams: PokeListQueryParams;
+  updateQueryParams: (updatedParams: Partial<PokeListQueryParams>) => void;
 }

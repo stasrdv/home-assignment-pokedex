@@ -7,7 +7,7 @@ import { PokeListControls } from "./pokeListControls";
 import { usePokeListQueryParams } from "./usePokeListParams";
 
 export const PokemonList: FC = () => {
-  const queryParams = usePokeListQueryParams();
+  const { queryParams } = usePokeListQueryParams();
   const { data, error, isLoading } = usePokemonListQuery(queryParams);
   if (error) return <Empty />;
 

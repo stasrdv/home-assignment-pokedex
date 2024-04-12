@@ -7,7 +7,7 @@ import { usePokeListQueryParams } from "./usePokeListParams";
 const { Text } = Typography;
 
 export const PokemonPagination: FC = () => {
-  const queryParams = usePokeListQueryParams();
+  const { queryParams, updateQueryParams } = usePokeListQueryParams();
   const { data, isLoading } = usePokemonListQuery(queryParams);
   const [totalItemsCount, setTotalItemsCount] = useState(0);
 
@@ -18,7 +18,7 @@ export const PokemonPagination: FC = () => {
   }, [data]);
 
   const handleOnChange = (page: number, size: number): void => {
-    queryParams.setPagination(page, size);
+    updateQueryParams({ pageSize: size, currentPage: page });
   };
   return (
     <StyledPagination
