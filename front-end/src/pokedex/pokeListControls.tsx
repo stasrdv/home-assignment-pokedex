@@ -11,6 +11,7 @@ import { usePokeListQueryParams } from "./usePokeListParams";
 
 export const PokeListControls: FC = () => {
   const { queryParams, updateQueryParams } = usePokeListQueryParams();
+  const { sortOrder, selectedType } = queryParams;
   return (
     <StyledControl>
       <PokemonPagination />
@@ -18,14 +19,14 @@ export const PokeListControls: FC = () => {
         <Button
           icon={<SortDescendingOutlined />}
           onClick={() => updateQueryParams({ sortOrder: "desc" })}
-          type={queryParams.sortOrder === "desc" ? "primary" : "default"}
+          type={sortOrder === "desc" ? "primary" : "default"}
         >
           Descending
         </Button>
         <Button
           icon={<SortAscendingOutlined />}
           onClick={() => updateQueryParams({ sortOrder: "asc" })}
-          type={queryParams.sortOrder === "asc" ? "primary" : "default"}
+          type={sortOrder === "asc" ? "primary" : "default"}
         >
           Ascending
         </Button>
@@ -33,7 +34,7 @@ export const PokeListControls: FC = () => {
 
       <PokemonTypesSelect
         handleTypeSelect={(selectedType) => updateQueryParams({ selectedType })}
-        selectedType={queryParams.selectedType}
+        selectedType={selectedType}
       />
     </StyledControl>
   );
