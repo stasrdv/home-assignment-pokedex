@@ -1,4 +1,4 @@
-import { Avatar, List, Typography } from "antd";
+import { Avatar, List, Tag, Typography } from "antd";
 import { FC } from "react";
 import styled from "styled-components";
 import { Pokemon } from "./types/pokemon";
@@ -23,7 +23,7 @@ export const PokemonListItem: FC<{ pokemon: Pokemon }> = ({ pokemon }) => {
                 value && (
                   <div key={key}>
                     <Text strong>{capitalizeFirstLetter(key)}: </Text>
-                    <Text>{value}</Text>
+                    <Tag color='blue'>{value}</Tag>
                   </div>
                 )
             )}
@@ -43,6 +43,7 @@ const StyledDescription = styled.div`
     color: ${({ theme }) => theme.text};
   }
 `;
+
 function capitalizeFirstLetter(key: string): string {
   return key.charAt(0).toUpperCase() + key.slice(1);
 }
