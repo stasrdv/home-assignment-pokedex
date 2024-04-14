@@ -42,30 +42,15 @@ export const usePokeListQueryParams = (): PokeListParams => {
   }, [searchParams]);
 
   const updateSearchParams = (updatedParams: Partial<PokeListQueryParams>) => {
+    const { currentPage, pageSize, selectedType, sortOrder } = updatedParams;
     const searchParams = new URLSearchParams(location.search);
 
-    if (updatedParams.currentPage) {
-      searchParams.set("page", String(updatedParams.currentPage));
-    } else {
-      searchParams.set("page", String(DEFAULT_PAGE));
-    }
-    if (updatedParams.pageSize) {
-      searchParams.set("page_size", String(updatedParams.pageSize));
-    } else {
-      searchParams.set("page_size", String(DEFAULT_PAGE_SIZE));
-    }
-    if (updatedParams.selectedType) {
-      searchParams.set("poke_type", updatedParams.selectedType || "");
-    } else {
-      searchParams.delete("poke_type");
-    }
-
-    if (updatedParams.sortOrder) {
-      searchParams.set(
-        "sort_order",
-        updatedParams.sortOrder || DEFAULT_SORT_ORDER
-      );
-    }
+    searchParams.set("page", String(currentPage || DEFAULT_PAGE));
+    searchParams.set("page_size", String(pageSize || DEFAULT_PAGE_SIZE));
+    selectedType
+      ? searchParams.set("poke_type", selectedType)
+      : searchParams.delete("poke_type");
+    searchParams.set("sort_order", sortOrder || DEFAULT_SORT_ORDER);
 
     navigate({
       pathname: location.pathname,
