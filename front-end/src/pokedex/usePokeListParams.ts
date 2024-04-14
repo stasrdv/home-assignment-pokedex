@@ -11,13 +11,9 @@ export const usePokeListQueryParams = (): PokeListParams => {
   const [searchParams] = useSearchParams();
   const [queryParams, setQueryParams] = useState<PokeListParams["queryParams"]>(
     {
-      currentPage: parseInt(
-        searchParams.get("page") || String(DEFAULT_PAGE),
-        10
-      ),
+      currentPage: parseInt(searchParams.get("page") || String(DEFAULT_PAGE)),
       pageSize: parseInt(
-        searchParams.get("page_size") || String(DEFAULT_PAGE_SIZE),
-        10
+        searchParams.get("page_size") || String(DEFAULT_PAGE_SIZE)
       ),
       selectedType: searchParams.get("poke_type") || "",
       sortOrder:
@@ -27,13 +23,9 @@ export const usePokeListQueryParams = (): PokeListParams => {
 
   useEffect(() => {
     setQueryParams({
-      currentPage: parseInt(
-        searchParams.get("page") || String(DEFAULT_PAGE),
-        10
-      ),
+      currentPage: parseInt(searchParams.get("page") || String(DEFAULT_PAGE)),
       pageSize: parseInt(
-        searchParams.get("page_size") || String(DEFAULT_PAGE_SIZE),
-        10
+        searchParams.get("page_size") || String(DEFAULT_PAGE_SIZE)
       ),
       selectedType: searchParams.get("poke_type") || "",
       sortOrder:
@@ -54,7 +46,7 @@ export const usePokeListQueryParams = (): PokeListParams => {
 
     navigate({
       pathname: location.pathname,
-      search: searchParams.toString() || undefined,
+      search: searchParams.toString(),
     });
   };
 
