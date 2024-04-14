@@ -35,10 +35,9 @@ export const usePokeListQueryParams = (): PokeListParams => {
 
   const updateSearchParams = (updatedParams: Partial<PokeListQueryParams>) => {
     const { currentPage, pageSize, selectedType, sortOrder } = updatedParams;
-    // using multiple if statements for each parameter is not scalable and violates the DRY (Don't Repeat Yourself) principle.
     searchParams.set("page", String(currentPage || DEFAULT_PAGE));
     searchParams.set("page_size", String(pageSize || DEFAULT_PAGE_SIZE));
-    selectedType ? searchParams.set("poke_type", selectedType || "") : null;
+    searchParams.set("poke_type", selectedType || "");
     searchParams.set("sort_order", sortOrder || DEFAULT_SORT_ORDER);
     navigate({
       pathname: location.pathname,
